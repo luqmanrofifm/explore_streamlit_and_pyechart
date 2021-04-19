@@ -5,6 +5,8 @@ import pandas as pd
 from streamlit_folium import folium_static
 from folium import Choropleth, Circle, Marker
 
+from libraries.plotly_lib import plot_scatter
+
 #create dataset for the chart, v1 is the revenue of Shopify in million dollars, x is the year
 
 def main():
@@ -12,8 +14,18 @@ def main():
     action = st.sidebar.selectbox("Navigation", ["PLOTLY","FOLIUM"])
     if action == "PLOTLY":
         st.title("Plotly")
+        location = st.sidebar.text_input("location")
         fp = st.sidebar.file_uploader("Select your file") 
-        st.sidebar.button("cek")
+        type_map = st.sidebar.selectbox("type",["Scatter"])
+        longitude = st.sidebar.text_input("Column name for longitude")
+        latitude = st.sidebar.text_input("Column name for latitude")
+        hover_name = st.sidebar.text_input("hover name")
+        df = load_table(fp)
+        if (type_map == "Scatter"):
+            if st.sidebar.button("Plot"):
+                st.write(df)
+                fig = plot_scatter(df, location, longitude, latitude, hover_name)
+                st.plotly_chart(fig)
 
     elif action == "FOLIUM":
         st.title("Folium")
@@ -36,6 +48,16 @@ def plotting_point(data, lat_name, long_name, type_map='openstreetmap', center_l
         Marker([row[lat_name], row[long_name]]).add_to(map)
     
     return map
+
+def load_table(data):
+    df = pd.read_excel('lokasitps.xlsx', sheet_name='teamtouring.net', engine='openpyxl')
+    return df
+
+def add(a,b):
+
+        c = a+b
+
+        return c
     
 
 if __name__ == "__main__":
