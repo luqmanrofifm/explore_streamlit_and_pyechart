@@ -1,1 +1,1 @@
-# explore_streamlit_and_pyechart
+# explore_streamlit_plotly_folium
